@@ -1,38 +1,40 @@
-import { FormEvent, useState } from 'react';
-import styles from './PostComments.module.css';
+import { useState } from 'react'
 
-import Comment from '../../models/Comment';
+const PostComments = () => {
+  const [comments, setComments] = useState<string[]>([])
+  const [newComment, setNewComment] = useState('')
 
-const Post = () => {
-    const [comments, setComments] = useState<Comment[]>([]);
-    const [tempComment, setTempComment] = useState('');
-
-    function handleAddComment(event: FormEvent<HTMLFormElement>) {
-        event.preventDefault();
-        const newComment = new Comment(comments.length, tempComment);
-        setTempComment('');
-        setComments([...comments, newComment]);
+  const handleAddComment = () => {
+    if (newComment.trim() !== '') {
+      setComments([...comments, newComment])
+      setNewComment('')
     }
+  }
 
-    return (
-        <div>
-            <ul className={styles['post-comments']}>
-                {comments.map(({ comment, id }) => (
-                    <li className={styles['post-comment']} key={id}>
-                        <p className={styles['post-comment-content']}>
-                            {comment}
-                        </p>
-                    </li>
-                ))}
-            </ul>
-            <form onSubmit={handleAddComment} className={styles['post-comments-form']}>
-                <textarea value={tempComment} onChange={e => setTempComment(e.target.value)} required className={styles['post-comments-form-textarea']} />
-                <button type="submit" className={styles['post-comments-form-button']}>
-                    Comentar
-                </button>
-            </form>
-        </div>
-    );
+  return (
+    <div>
+      <h2>Seção de Comentários</h2>
+      <input
+        data-testid="comment-input"
+        type="text"
+        value={newComment}
+        onChange={(e) => setNewComment(e.target.value)}
+        placeholder="Digite seu comentário"
+      />
+      <button
+        data-testid="submit-button"
+        onClick={handleAddComment}
+      >
+        Adicionar comentário
+      </button>
+
+      <ul data-testid="comments-list">
+        {comments.map((comment, index) => (
+          <li key={index}>{comment}</li>
+        ))}
+      </ul>
+    </div>
+  )
 }
 
-export default Post;
+export default PostComments
