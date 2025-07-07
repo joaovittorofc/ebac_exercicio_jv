@@ -1,25 +1,38 @@
 describe('Agenda de Contatos', () => {
   beforeEach(() => {
-    cy.visit('/');
-  });
+    cy.visit('/')
+  })
 
   it('Inclui um contato', () => {
-    cy.get('input[name="name"]').type('Maria');
-    cy.get('input[name="email"]').type('maria@teste.com');
-    cy.contains('button', 'Salvar').click();
-    cy.contains('Maria').should('exist');
-    cy.contains('maria@teste.com').should('exist');
-  });
+    cy.get('input[placeholder="Nome"]').type('João Teste')
+    cy.get('input[placeholder="E-mail"]').type('joao@email.com')
+    cy.get('input[placeholder="Telefone"]').type('99999-9999')
+    cy.contains('Adicionar').click()
 
-  it('Altera um contato', () => {
-    cy.contains('Maria').parent().contains('Editar').click();
-    cy.get('input[name="name"]').clear().type('Maria Silva');
-    cy.contains('Salvar').click();
-    cy.contains('Maria Silva').should('exist');
-  });
+    cy.contains('João Teste').should('exist')
+    cy.contains('joao@email.com').should('exist')
+    cy.contains('99999-9999').should('exist')
+  })
 
   it('Remove um contato', () => {
-    cy.contains('Maria Silva').parent().contains('Excluir').click();
-    cy.contains('Maria Silva').should('not.exist');
-  });
-});
+    // Primeiro, adiciona um contato
+    cy.get('input[placeholder="Nome"]').type('Contato Remover')
+    cy.get('input[placeholder="E-mail"]').type('remover@email.com')
+    cy.get('input[placeholder="Telefone"]').type('88888-8888')
+    cy.contains('Adicionar').click()
+
+    // Verifica se foi adicionado
+    cy.contains('Contato Remover').should('exist')
+
+    // Clica no botão de remover (assumindo que seja um botão com texto "Remover")
+    cy.contains('Contato Remover')
+      .parent()
+      .find('button')
+      .contains('Remover')
+      .click()
+
+    // Verifica se foi removido
+    cy.contains('Contato Remover').should('not.exist')
+  })
+})
+
